@@ -1,0 +1,47 @@
+CC = g++
+
+FIREDIR = Fire
+FIRE_INCL = -IFire/src -IFire/src/Fire -IFire/vendor/spdlog/include -IFire/vendor/glad/include -IFire/vendor/imgui-docking
+#-IFire/vendor/glad
+FIRE_CFLAGS = -std=c++17 -fPIC -g -Wall
+
+APPDIR = Sandbox
+APP_INCL = -IFire/src -IFire/vendor/spdlog/include
+#-IFire/vendor/glad
+APP_CFLAGS = -std=c++11 -lpthread -g -Wall
+APP_LFLAGS = -LFire/lib -lFire -lglfw -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+APP_DEFINES = -D GLFW_INCLUDE_NONE
+
+$(FIREDIR)/obj/%.o: $(FIREDIR)/src/%.cpp
+	$(CC) -c $(FIRE_INCL) -o $@ $< $(FIRE_CFLAGS)
+
+all:
+	# ar rvs mylib.a *.o	# Code to archive objects to static library
+	
+	# Compile Fire to dynamic library
+	$(CC) -c Fire/src/Fire/*.cpp $(FIRE_INCL) $(FIRE_CFLAGS) $(APP_DEFINES)
+	$(CC) -c Fire/src/Fire/ImGui/*.cpp $(FIRE_INCL) $(FIRE_CFLAGS) $(APP_DEFINES)
+	$(CC) -c Fire/src/Platform/Mac/*.cpp $(FIRE_INCL) $(FIRE_CFLAGS) $(APP_DEFINES)
+#	$(CC) -c Fire/src/Platform/OpenGL/*.cpp $(FIRE_INCL) $(FIRE_CFLAGS) $(APP_DEFINES)
+	$(CC) -c Fire/vendor/imgui-docking/*.cpp $(FIRE_INCL) $(FIRE_CFLAGS) $(APP_DEFINES)
+	gcc -c -g Fire/vendor/glad/src/*.c $(FIRE_INCL) $(FIRE_FLAGS) $(APP_DEFINES)
+	$(CC) *.o -shared -o libFire.so -lglfw -framework OpenGL $(APP_DEFINES)
+	mv *.o Fire/obj
+	cp libFire.so $(APPDIR)/bin
+	cp libFire.so Fire/lib
+	
+	# Compile application
+	$(CC) $(APP_INCL) $(APP_CFLAGS) $(APP_LFLAGS) $(APP_DEFINES) -o $(APPDIR)/bin/$(APPDIR) $(APPDIR)/src/*.cpp
+
+run:
+	cd $(APPDIR)/bin
+	./$(APPDIR)
+	cd ../..
+
+.PHONY: clean
+
+clean:
+	@echo "Cleaning up..."
+	rm $(FIREDIR)/obj/* $(FIREDIR)/lib/*
+	rm $(APPDIR)/obj/* $(APPDIR)/bin/*
+	rm *.o *.so

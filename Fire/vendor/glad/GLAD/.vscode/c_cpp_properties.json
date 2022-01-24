@@ -1,0 +1,47 @@
+{
+  "configurations": [
+  {
+    "name": "GLAD Debug",
+    "includePath": [
+      "${workspaceFolder}/**"
+      ,"/Users/jsb/Dropbox/Documents/Fire/Fire/vendor/glad/include"
+    ],
+    "defines": [
+    ],
+    "compilerPath": "/usr/bin/g++",
+    "intelliSenseMode": "gcc-x64",
+    "compilerArgs": [
+      ""
+    ]
+  }
+  ,{
+    "name": "GLAD Release",
+    "includePath": [
+      "${workspaceFolder}/**"
+      ,"/Users/jsb/Dropbox/Documents/Fire/Fire/vendor/glad/include"
+    ],
+    "defines": [
+    ],
+    "compilerPath": "/usr/bin/g++",
+    "intelliSenseMode": "gcc-x64",
+    "compilerArgs": [
+      ""
+    ]
+  }
+  ,{
+    "name": "GLAD Dist",
+    "includePath": [
+      "${workspaceFolder}/**"
+      ,"/Users/jsb/Dropbox/Documents/Fire/Fire/vendor/glad/include"
+    ],
+    "defines": [
+    ],
+    "compilerPath": "/usr/bin/g++",
+    "intelliSenseMode": "gcc-x64",
+    "compilerArgs": [
+      ""
+    ]
+  }
+  ],
+  "version": 4
+}

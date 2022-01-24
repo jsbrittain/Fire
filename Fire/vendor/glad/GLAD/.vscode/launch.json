@@ -1,0 +1,83 @@
+﻿{
+  "version": "0.2.0",
+  "configurations": [
+  {
+    "name": "GLAD: Build and debug",
+    "type": "cppdbg",
+    "request": "launch",
+    "program": "/Users/jsb/Dropbox/Documents/Fire/bin/Debug-macosx-x86_64/GLAD/GLAD",
+    "args": [],
+    "stopAtEntry": false,
+    "cwd": "${workspaceFolder}/../",
+    "environment": [],
+    "externalConsole": false,
+    "MIMode": "gdb",
+    "setupCommands": [
+      {
+      "description": "Enable pretty-printing for gdb",
+      "text": "-enable-pretty-printing",
+      "ignoreFailures": true
+      },
+      {
+      "description": "Enable break on all-exceptions",
+      "text": "catch throw",
+      "ignoreFailures": true
+      }
+    ],
+    "preLaunchTask": "C/C++: build",
+    "miDebuggerPath": "/usr/bin/gdb"
+  }
+  ,{
+    "name": "GLAD: Build and debug",
+    "type": "cppdbg",
+    "request": "launch",
+    "program": "/Users/jsb/Dropbox/Documents/Fire/bin/Release-macosx-x86_64/GLAD/GLAD",
+    "args": [],
+    "stopAtEntry": false,
+    "cwd": "${workspaceFolder}/../",
+    "environment": [],
+    "externalConsole": false,
+    "MIMode": "gdb",
+    "setupCommands": [
+      {
+      "description": "Enable pretty-printing for gdb",
+      "text": "-enable-pretty-printing",
+      "ignoreFailures": true
+      },
+      {
+      "description": "Enable break on all-exceptions",
+      "text": "catch throw",
+      "ignoreFailures": true
+      }
+    ],
+    "preLaunchTask": "C/C++: build",
+    "miDebuggerPath": "/usr/bin/gdb"
+  }
+  ,{
+    "name": "GLAD: Build and debug",
+    "type": "cppdbg",
+    "request": "launch",
+    "program": "/Users/jsb/Dropbox/Documents/Fire/bin/Dist-macosx-x86_64/GLAD/GLAD",
+    "args": [],
+    "stopAtEntry": false,
+    "cwd": "${workspaceFolder}/../",
+    "environment": [],
+    "externalConsole": false,
+    "MIMode": "gdb",
+    "setupCommands": [
+      {
+      "description": "Enable pretty-printing for gdb",
+      "text": "-enable-pretty-printing",
+      "ignoreFailures": true
+      },
+      {
+      "description": "Enable break on all-exceptions",
+      "text": "catch throw",
+      "ignoreFailures": true
+      }
+    ],
+    "preLaunchTask": "C/C++: build",
+    "miDebuggerPath": "/usr/bin/gdb"
+  }
+  ]
+}
