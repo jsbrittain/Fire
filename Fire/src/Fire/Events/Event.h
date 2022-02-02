@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Fire/Core.h"
+#include "Fire/Core/Base.h"
 
 namespace Fire {
 

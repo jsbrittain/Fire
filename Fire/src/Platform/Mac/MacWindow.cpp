@@ -1,5 +1,5 @@
 #include "frpch.h"
-#include "MacWindow.h"
+#include "Platform/Mac/MacWindow.h"
 
 #include "Fire/Events/ApplicationEvent.h"
 #include "Fire/Events/MouseEvent.h"
@@ -9,42 +9,48 @@
 
 namespace Fire {
 
-	static bool is_GLFWInitialized = false;
+	static uint8_t s_GLFWWindowCount = 0;
 	
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		FR_CORE_ERROR("GLFW Error ({0}): {1}",error,description);
 	}
 
-	Window* Window::Create(const WindowProps& props)
+	Scope<Window> Window::Create(const WindowProps& props)
 	{
-		return new MacWindow(props);
+		return CreateScope<MacWindow>(props);
 	}
 
 	MacWindow::MacWindow(const WindowProps& props)
 	{
+		FR_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	MacWindow::~MacWindow()
 	{
+		FR_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void MacWindow::Init(const WindowProps& props)
 	{
+		FR_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
 		FR_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (!is_GLFWInitialized)
+		if (s_GLFWWindowCount == 0)
 		{
+			FR_PROFILE_SCOPE("glfwInit");
 			int success = glfwInit();
 			FR_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
-			is_GLFWInitialized = true;
 		}
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -53,9 +59,14 @@ namespace Fire {
     #if __APPLE__
 	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);            // Required on Mac
 	#endif
+		
+		{
+			FR_PROFILE_SCOPE("glfwCreateWindow");
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		m_Context = new OpenGLContext(m_Window);
+		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
@@ -147,17 +158,29 @@ namespace Fire {
 
 	void MacWindow::Shutdown()
 	{
+		FR_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
+		--s_GLFWWindowCount;
+		if (s_GLFWWindowCount == 0)
+		{
+			FR_CORE_INFO("Terminating GLFW");
+			glfwTerminate();
+		}
 	}
 
 	void MacWindow::OnUpdate()
 	{
+		FR_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 	}
 
 	void MacWindow::SetVSync( bool enabled )
 	{
+		FR_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

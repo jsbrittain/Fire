@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Fire/Window.h"
+#include "Fire/Core/Window.h"
 #include "Fire/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
@@ -28,7 +28,7 @@ namespace Fire {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
-		GraphicsContext* m_Context;
+		Scope<GraphicsContext> m_Context;
 		struct WindowData
 		{
 			std::string Title;

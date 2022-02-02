@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Fire/Layer.h"
+#include "Fire/Core/Layer.h"
 
 #include "Fire/Events/ApplicationEvent.h"
 #include "Fire/Events/KeyEvent.h"
@@ -16,7 +16,7 @@ namespace Fire {
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnImGuiRender() override;
+		virtual void OnEvent(Event& e) override;
 
 		void Begin();
 		void End();

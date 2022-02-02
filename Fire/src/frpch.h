@@ -13,4 +13,5 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Fire/Log.h"
+#include "Fire/Core/Log.h"
+#include "Fire/Debug/Instrumentor.h"

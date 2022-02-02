@@ -1,7 +1,7 @@
 #include "frpch.h"
-#include "Shader.h"
+#include "Fire/Renderer/Shader.h"
 
-#include "Renderer.h"
+#include "Fire/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Fire {
@@ -11,7 +11,7 @@ namespace Fire {
  		switch (Renderer::GetAPI())
  		{
  			case RendererAPI::API::None:    FR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
- 			case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLShader>(filepath);
+ 			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(filepath);
  		}
  		
  		FR_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -23,7 +23,7 @@ namespace Fire {
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:    FR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		FR_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -42,21 +42,21 @@ namespace Fire {
  		Add(name, shader);
  	}
 
- 	Fire::Ref<Fire::Shader> ShaderLibrary::Load(const std::string& filepath)
+ 	Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
  	{
  		auto shader = Shader::Create(filepath);
  		Add(shader);
  		return shader;
  	}
 
- 	Fire::Ref<Fire::Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+ 	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
  	{
  		auto shader = Shader::Create(filepath);
  		Add(name, shader);
  		return shader;
  	}
 
- 	Fire::Ref<Fire::Shader> ShaderLibrary::Get(const std::string& name)
+ 	Ref<Shader> ShaderLibrary::Get(const std::string& name)
  	{
  		FR_CORE_ASSERT(Exists(name), "Shader not found!");
  		return m_Shaders[name];

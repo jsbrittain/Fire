@@ -1,5 +1,5 @@
 workspace "Fire"
-	architecture "x64"
+	architecture "x86_64"
 	startproject "Sandbox"
 
 	--require "vscode"
@@ -33,3 +33,4 @@ group ""
 
 include "Fire"
 include "Sandbox"
+--include "Games/Flappy"

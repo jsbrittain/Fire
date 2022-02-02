@@ -1,12 +1,12 @@
 #include "frpch.h"
-#include "MacInput.h"
+#include "Platform/Mac/MacInput.h"
 
-#include "Fire/Application.h"
+#include "Fire/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Fire {
 
-	Input* Input::s_Instance = new MacInput();		// Can do this because MacInput is static
+	Scope<Input> Input::s_Instance = CreateScope<MacInput>();
 
 	bool MacInput::IsKeyPressedImpl(int keycode)
 	{

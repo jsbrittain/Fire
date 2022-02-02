@@ -82,7 +82,9 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/Sandbox2D.o
 GENERATED += $(OBJDIR)/SandboxApp.o
+OBJECTS += $(OBJDIR)/Sandbox2D.o
 OBJECTS += $(OBJDIR)/SandboxApp.o
 
 # Rules
@@ -147,6 +149,9 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/Sandbox2D.o: src/Sandbox2D.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/SandboxApp.o: src/SandboxApp.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

@@ -1,6 +1,10 @@
 .DS_store
 run
 Fire/vendor
+obj
+jsbmake
+imgui.ini
+Makefile.keep
 
 # Prerequisites
 *.d

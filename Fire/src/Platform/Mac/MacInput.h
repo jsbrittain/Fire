@@ -1,5 +1,5 @@
 #pragma once
-#include "Fire/Input.h"
+#include "Fire/Core/Input.h"
 
 namespace Fire {
 

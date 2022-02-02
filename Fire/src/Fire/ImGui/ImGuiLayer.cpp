@@ -1,12 +1,12 @@
 #include "frpch.h"
-#include "ImGuiLayer.h"
+#include "Fire/ImGui/ImGuiLayer.h"
 
-#include "imgui.h"
+#include <imgui.h>
 //#define IMGUI_IMPL_API
-#include "backends/imgui_impl_glfw.h"				// .cpp edited on line 87 to remove non-critical error on non-win32 machines, disabled passthrough
-#include "backends/imgui_impl_opengl3.h"
+#include <backends/imgui_impl_glfw.h>				// .cpp edited on line 87 to remove non-critical error on non-win32 machines, disabled passthrough
+#include <backends/imgui_impl_opengl3.h>
 
-#include "Fire/Application.h"
+#include "Fire/Core/Application.h"
 
 // Temp
 #include "GLFW/glfw3.h"
@@ -25,6 +25,8 @@ namespace Fire {
 
 	void ImGuiLayer::OnAttach()
 	{
+		FR_PROFILE_FUNCTION();
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -49,13 +51,24 @@ namespace Fire {
 
 	void ImGuiLayer::OnDetach()
 	{
+		FR_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
 
+	void ImGuiLayer::OnEvent(Event& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+ 		e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+	}
+
 	void ImGuiLayer::Begin()
 	{
+		FR_PROFILE_FUNCTION();
+
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*> (app.GetWindow().GetNativeWindow());
 		ImGui_ImplOpenGL3_NewFrame();
@@ -65,6 +78,8 @@ namespace Fire {
 
 	void ImGuiLayer::End()
 	{
+		FR_PROFILE_FUNCTION();
+		
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(),(float)app.GetWindow().GetHeight());
@@ -80,12 +95,6 @@ namespace Fire {
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
-	}
-
-	void ImGuiLayer::OnImGuiRender()
-	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
 	}
 
 }
