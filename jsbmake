@@ -1,7 +1,0 @@
-./clc
-rm Sandbox/bin/Sandbox
-rm Fire/obj/*
-make -f Makefile.jsb.keep clean
-time make -f Makefile.jsb.keep
-./run
-
