@@ -15,7 +15,7 @@ namespace Fire {
 	class FIRE_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Fire App");
 		virtual ~Application();
 		
 		void Run();
@@ -27,6 +27,8 @@ namespace Fire {
 		inline Window& GetWindow() { return *m_Window; }
 
 		void Close();
+
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 		
 		inline static Application& Get() { return *s_Instance; }
 	private:

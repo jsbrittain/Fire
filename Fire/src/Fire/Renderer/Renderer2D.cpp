@@ -92,7 +92,7 @@ namespace Fire {
               s_Data.TextureShader->Bind();
               s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
-              // Set all texture slots to 0
+              // Set first texture slot to 0
               s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
               s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -115,26 +115,43 @@ namespace Fire {
  		s_Data.TextureShader->Bind();
               s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
-              s_Data.QuadIndexCount = 0;
-              s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-              s_Data.TextureSlotIndex = 1;
+              StartBatch();
  	}
+
+       void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+       {
+              FR_PROFILE_FUNCTION();
+
+              glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+              s_Data.TextureShader->Bind();
+              s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+              StartBatch();
+       }
 
  	void Renderer2D::EndScene()
  	{
               FR_PROFILE_FUNCTION();
 
-              uint32_t dataSize = (uint32_t) ((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-              s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-
               Flush();
  	}
+
+       void Renderer2D::StartBatch()
+       {
+              s_Data.QuadIndexCount = 0;
+              s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+              s_Data.TextureSlotIndex = 1;
+       }
 
        void Renderer2D::Flush()
        {
               if (s_Data.QuadIndexCount == 0)
                      return;
+
+              uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+              s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
               
               // Bind texture
               for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
@@ -144,14 +161,10 @@ namespace Fire {
               s_Data.Stats.DrawCalls++;
        }
 
-       void Renderer2D::FlushAndReset()
+       void Renderer2D::NextBatch()
        {
-              EndScene();
-
-              s_Data.QuadIndexCount = 0;
-              s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-              s_Data.TextureSlotIndex = 1;
+              Flush();
+              StartBatch();
        }
 
  	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation)
@@ -182,7 +195,7 @@ namespace Fire {
               float textureIndex = 0.0f;
               for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
               {
-                     if (*s_Data.TextureSlots[i].get() == *texture.get())
+                     if (*s_Data.TextureSlots[i] == *texture)
                      {
                             textureIndex = (float)i;
                             break;
@@ -193,7 +206,7 @@ namespace Fire {
               if (textureIndex == 0.0f)
               {
                      if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
-                            FlushAndReset();
+                            NextBatch();
 
                      textureIndex = (float) s_Data.TextureSlotIndex;
                      s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
@@ -217,7 +230,7 @@ namespace Fire {
               float textureIndex = 0.0f;
               for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
               {
-                     if (*s_Data.TextureSlots[i].get() == *texture.get())
+                     if (*s_Data.TextureSlots[i] == *texture)
                      {
                             textureIndex = (float)i;
                             break;
@@ -228,7 +241,7 @@ namespace Fire {
               if (textureIndex == 0.0f)
               {
                      if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
-                            FlushAndReset();
+                            NextBatch();
 
                      textureIndex = (float) s_Data.TextureSlotIndex;
                      s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
@@ -238,14 +251,48 @@ namespace Fire {
               _DrawQuad(position, size, textureIndex, textureCoords, rotation, tilingFactor, tintColor);
        }
 
+       void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+       {
+              constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+              
+              float textureIndex = 0.0f;  // White texture
+              float tilingFactor = 1.0f;
+
+              _DrawQuad(transform, textureIndex, textureCoords, tilingFactor, color);
+       }
+
+       void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+       {
+              constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+              
+              // Search for existing texture binding
+              float textureIndex = 0.0f;
+              for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+              {
+                     if (*s_Data.TextureSlots[i] == *texture)
+                     {
+                            textureIndex = (float)i;
+                            break;
+                     }
+              }
+
+              // If texture not already bind, then add to new texture slot
+              if (textureIndex == 0.0f)
+              {
+                     if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+                            NextBatch();
+
+                     textureIndex = (float) s_Data.TextureSlotIndex;
+                     s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+                     s_Data.TextureSlotIndex++;
+              }
+
+              _DrawQuad(transform, textureIndex, textureCoords, tilingFactor, tintColor);
+       }
+
        void Renderer2D::_DrawQuad(const glm::vec3& position, const glm::vec2& size, float textureIndex, const glm::vec2* textureCoords, float rotation, float tilingFactor, const glm::vec4& tintColor)
        {
-              FR_PROFILE_FUNCTION();
-
-              constexpr size_t quadVertexCount = 4;
-              
-              if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
-                     FlushAndReset();
+              // Calculate transformation matrix from position and rotation
 
               glm::mat4 Mrotate = glm::mat4(1.0f);
               if ( rotation != 0.0f )
@@ -253,6 +300,18 @@ namespace Fire {
 
               glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
                      * Mrotate * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+              _DrawQuad(transform, textureIndex, textureCoords, tilingFactor, tintColor);
+       }
+
+       void Renderer2D::_DrawQuad(const glm::mat4& transform, float textureIndex, const glm::vec2* textureCoords, float tilingFactor, const glm::vec4& tintColor)
+       {
+              FR_PROFILE_FUNCTION();
+
+              constexpr size_t quadVertexCount = 4;
+              
+              if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+                     NextBatch();
 
               for (size_t i = 0; i < quadVertexCount; i++)
               {

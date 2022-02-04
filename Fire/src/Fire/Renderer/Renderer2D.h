@@ -4,6 +4,8 @@
 #include "Fire/Renderer/Texture.h"
 #include "Fire/Renderer/SubTexture2D.h"
 
+#include "Fire/Renderer/Camera.h"
+
 namespace Fire {
 
     class Renderer2D
@@ -12,7 +14,8 @@ namespace Fire {
         static void Init();
         static void Shutdown();
 
-        static void BeginScene(const OrthographicCamera& camera);
+        static void BeginScene(const Camera& camera, const glm::mat4& transform);
+        static void BeginScene(const OrthographicCamera& camera);       // TODO: Remove
         static void EndScene();
         static void Flush();
 
@@ -26,6 +29,9 @@ namespace Fire {
         // Sub-texture (from sprite-sheets), vec2 and vec3
         static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float rotation=0.0f, float tilingFactor=1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
         static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float rotation=0.0f, float tilingFactor=1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+        // Position[Translation], rotation and size included in 'transform'.
+        static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+        static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
         // Stats
         struct Statistics
@@ -39,8 +45,10 @@ namespace Fire {
         static void ResetStats();
         static Statistics GetStats();
     private:
-        static void FlushAndReset();
+        static void StartBatch();
+        static void NextBatch();
         static void _DrawQuad(const glm::vec3& position, const glm::vec2& size, float textureIndex, const glm::vec2* textureCoords, float rotation, float tilingFactor, const glm::vec4& tintColor);
+        static void _DrawQuad(const glm::mat4& transform, float textureIndex, const glm::vec2* textureCoords, float tilingFactor, const glm::vec4& tintColor);
     };
 
 }

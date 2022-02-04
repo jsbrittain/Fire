@@ -1,7 +1,6 @@
 #include <Fire.h>
 #include <Fire/Core/EntryPoint.h>
 
-//#include "ExampleLayer.h"
 #include "Sandbox2D.h"
 
 class Sandbox : public Fire::Application

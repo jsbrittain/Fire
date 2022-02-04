@@ -1,0 +1,10 @@
+[20:49:18] [info] FIRE: Creating window Fire Editor (1280, 720)
+[20:49:18] [info] FIRE: OpenGL Info:
+[20:49:18] [info] FIRE:   Vendor: ATI Technologies Inc.
+[20:49:18] [info] FIRE:   Renderer: AMD Radeon Pro 580X OpenGL Engine
+[20:49:18] [info] FIRE:   Version: 4.1 ATI-4.6.20
+[20:49:18] [error] FIRE: Assertion failed: Failed to load image: 
+[20:49:18] [error] FIRE: Assertion failed: Format not supported!
+[20:49:18] [error] FIRE: Assertion failed: Failed to load image: 
+[20:49:18] [error] FIRE: Assertion failed: Format not supported!
+[20:49:20] [info] FIRE: Terminating GLFW

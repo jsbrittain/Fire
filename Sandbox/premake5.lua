@@ -21,7 +21,8 @@ project "Sandbox"
 		"%{wks.location}/Fire/vendor/spdlog/include",
 		"%{wks.location}/Fire/vendor/glad",
 		"%{wks.location}/Fire/src",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links

@@ -10,11 +10,18 @@
 #include "Fire/Core/Timestep.h"
 #include "Fire/Core/Input.h"
 #include "Fire/Core/KeyCodes.h"
-#include "Fire/Core/MouseButtonCodes.h"
+#include "Fire/Core/MouseCodes.h"
 
 #include "Fire/ImGui/ImGuiLayer.h"
 
+#include "Fire/Scene/Scene.h"
+#include "Fire/Scene/Entity.h"
+#include "Fire/Scene/ScriptableEntity.h"
+#include "Fire/Scene/Components.h"
+
 #include "Fire/Renderer/OrthographicCameraController.h"
+
+#include "Fire/Debug/Instrumentor.h"
 
 // --- Renderer ----------------------------
 

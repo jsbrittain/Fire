@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Fire/Events/Event.h"
+#include "Fire/Core/MouseCodes.h"
 
 namespace Fire {
 
 	class FIRE_API MouseMovedEvent : public Event
 	{
 	public:
-		MouseMovedEvent(float x, float y)
+		MouseMovedEvent(const float x, const float y)
 			: m_MouseX(x), m_MouseY(y) {}
 
 		inline float GetX() const { return m_MouseX; };
@@ -29,7 +30,7 @@ namespace Fire {
 	class FIRE_API MouseScrolledEvent : public Event
 	{
 	public:
-		MouseScrolledEvent(float xOffset, float yOffset)
+		MouseScrolledEvent(const float xOffset, const float yOffset)
 			: m_XOffset(xOffset), m_YOffset(yOffset) {}
 
 		inline float GetXOffset() const { return m_XOffset; };
@@ -51,11 +52,11 @@ namespace Fire {
 	class FIRE_API MouseButtonEvent : public Event
 	{
 	public:
-		inline int GetMouseButton() const { return m_Button; };
+		MouseCode GetMouseButton() const { return m_Button; };
 		
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
 	protected:
-		MouseButtonEvent(int button)
+		MouseButtonEvent(const MouseCode button)
 			: m_Button(button) {}
 		int m_Button;
 	};
@@ -63,7 +64,7 @@ namespace Fire {
 	class FIRE_API MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int button)
+		MouseButtonPressedEvent(const MouseCode button)
 			: MouseButtonEvent( button ) {}
 		
 		std::string ToString() const override
@@ -79,7 +80,7 @@ namespace Fire {
 	class FIRE_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int button)
+		MouseButtonReleasedEvent(const MouseCode button)
 			: MouseButtonEvent( button ) {}
 		
 		std::string ToString() const override

@@ -30,7 +30,7 @@ endif
 PCH = src/frpch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
-INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/glad/include -Ivendor/imgui-docking -Ivendor/glm -Ivendor/stb_image
+INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/glad/include -Ivendor/imgui-docking -Ivendor/glm -Ivendor/stb_image -Ivendor/entt/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -50,8 +50,8 @@ OBJDIR = ../obj/Debug-macosx-x86_64/Fire
 DEFINES += -DGLFW_INCLUDE_NONE -D_CRT_SECURE_NO_WARNINGS -DFR_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -fPIC -g -mmacosx-version-min=11
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -fPIC -g -std=c++17 -mmacosx-version-min=11
-LIBS += ../bin/Debug-macosx-x86_64/GLAD/libGLAD.a ../bin/Debug-macosx-x86_64/ImGui/libImGui.a -lglfw
-LDDEPS += ../bin/Debug-macosx-x86_64/GLAD/libGLAD.a ../bin/Debug-macosx-x86_64/ImGui/libImGui.a
+LIBS += ../bin/Debug-macosx-x86_64/GLAD/libGLAD.a vendor/imgui-docking/bin/Debug-macosx-x86_64/ImGui/libImGui.a -lglfw
+LDDEPS += ../bin/Debug-macosx-x86_64/GLAD/libGLAD.a vendor/imgui-docking/bin/Debug-macosx-x86_64/ImGui/libImGui.a
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-macosx-x86_64/Fire
@@ -60,8 +60,8 @@ OBJDIR = ../obj/Release-macosx-x86_64/Fire
 DEFINES += -DGLFW_INCLUDE_NONE -D_CRT_SECURE_NO_WARNINGS -DFR_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -fPIC -mmacosx-version-min=11
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -fPIC -std=c++17 -mmacosx-version-min=11
-LIBS += ../bin/Release-macosx-x86_64/GLAD/libGLAD.a ../bin/Release-macosx-x86_64/ImGui/libImGui.a -lglfw
-LDDEPS += ../bin/Release-macosx-x86_64/GLAD/libGLAD.a ../bin/Release-macosx-x86_64/ImGui/libImGui.a
+LIBS += ../bin/Release-macosx-x86_64/GLAD/libGLAD.a vendor/imgui-docking/bin/Release-macosx-x86_64/ImGui/libImGui.a -lglfw
+LDDEPS += ../bin/Release-macosx-x86_64/GLAD/libGLAD.a vendor/imgui-docking/bin/Release-macosx-x86_64/ImGui/libImGui.a
 
 else ifeq ($(config),dist)
 TARGETDIR = ../bin/Dist-macosx-x86_64/Fire
@@ -70,8 +70,8 @@ OBJDIR = ../obj/Dist-macosx-x86_64/Fire
 DEFINES += -DGLFW_INCLUDE_NONE -D_CRT_SECURE_NO_WARNINGS -DFR_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -fPIC -mmacosx-version-min=11
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -fPIC -std=c++17 -mmacosx-version-min=11
-LIBS += ../bin/Dist-macosx-x86_64/GLAD/libGLAD.a ../bin/Dist-macosx-x86_64/ImGui/libImGui.a -lglfw
-LDDEPS += ../bin/Dist-macosx-x86_64/GLAD/libGLAD.a ../bin/Dist-macosx-x86_64/ImGui/libImGui.a
+LIBS += ../bin/Dist-macosx-x86_64/GLAD/libGLAD.a vendor/imgui-docking/bin/Dist-macosx-x86_64/ImGui/libImGui.a -lglfw
+LDDEPS += ../bin/Dist-macosx-x86_64/GLAD/libGLAD.a vendor/imgui-docking/bin/Dist-macosx-x86_64/ImGui/libImGui.a
 
 endif
 
@@ -87,6 +87,7 @@ OBJECTS :=
 
 GENERATED += $(OBJDIR)/Application.o
 GENERATED += $(OBJDIR)/Buffer.o
+GENERATED += $(OBJDIR)/Entity.o
 GENERATED += $(OBJDIR)/Framebuffer.o
 GENERATED += $(OBJDIR)/GraphicsContext.o
 GENERATED += $(OBJDIR)/ImGuiBuild.o
@@ -109,6 +110,8 @@ GENERATED += $(OBJDIR)/RenderCommand.o
 GENERATED += $(OBJDIR)/Renderer.o
 GENERATED += $(OBJDIR)/Renderer2D.o
 GENERATED += $(OBJDIR)/RendererAPI.o
+GENERATED += $(OBJDIR)/Scene.o
+GENERATED += $(OBJDIR)/SceneCamera.o
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/SubTexture2D.o
 GENERATED += $(OBJDIR)/Texture.o
@@ -117,6 +120,7 @@ GENERATED += $(OBJDIR)/frpch.o
 GENERATED += $(OBJDIR)/stb_image.o
 OBJECTS += $(OBJDIR)/Application.o
 OBJECTS += $(OBJDIR)/Buffer.o
+OBJECTS += $(OBJDIR)/Entity.o
 OBJECTS += $(OBJDIR)/Framebuffer.o
 OBJECTS += $(OBJDIR)/GraphicsContext.o
 OBJECTS += $(OBJDIR)/ImGuiBuild.o
@@ -139,6 +143,8 @@ OBJECTS += $(OBJDIR)/RenderCommand.o
 OBJECTS += $(OBJDIR)/Renderer.o
 OBJECTS += $(OBJDIR)/Renderer2D.o
 OBJECTS += $(OBJDIR)/RendererAPI.o
+OBJECTS += $(OBJDIR)/Scene.o
+OBJECTS += $(OBJDIR)/SceneCamera.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/SubTexture2D.o
 OBJECTS += $(OBJDIR)/Texture.o
@@ -263,6 +269,15 @@ $(OBJDIR)/Texture.o: src/Fire/Renderer/Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/VertexArray.o: src/Fire/Renderer/VertexArray.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Entity.o: src/Fire/Scene/Entity.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Scene.o: src/Fire/Scene/Scene.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/SceneCamera.o: src/Fire/Scene/SceneCamera.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/MacInput.o: src/Platform/Mac/MacInput.cpp

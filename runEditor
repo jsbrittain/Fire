@@ -1,0 +1,3 @@
+cd bin/Debug-macosx-x86_64/FireEditor
+./FireEditor
+cd ../../..

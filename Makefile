@@ -13,24 +13,27 @@ ifeq ($(config),debug)
   ImGui_config = debug
   Fire_config = debug
   Sandbox_config = debug
+  FireEditor_config = debug
 
 else ifeq ($(config),release)
   GLAD_config = release
   ImGui_config = release
   Fire_config = release
   Sandbox_config = release
+  FireEditor_config = release
 
 else ifeq ($(config),dist)
   GLAD_config = dist
   ImGui_config = dist
   Fire_config = dist
   Sandbox_config = dist
+  FireEditor_config = dist
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := GLAD ImGui Fire Sandbox
+PROJECTS := GLAD ImGui Fire Sandbox FireEditor
 
 .PHONY: all clean help $(PROJECTS) Dependencies
 
@@ -62,11 +65,18 @@ ifneq (,$(Sandbox_config))
 	@${MAKE} --no-print-directory -C Sandbox -f Makefile config=$(Sandbox_config)
 endif
 
+FireEditor: Fire GLAD
+ifneq (,$(FireEditor_config))
+	@echo "==== Building FireEditor ($(FireEditor_config)) ===="
+	@${MAKE} --no-print-directory -C FireEditor -f Makefile config=$(FireEditor_config)
+endif
+
 clean:
 	@${MAKE} --no-print-directory -C Fire/vendor/glad -f Makefile clean
 	@${MAKE} --no-print-directory -C Fire/vendor/imgui-docking -f Makefile clean
 	@${MAKE} --no-print-directory -C Fire -f Makefile clean
 	@${MAKE} --no-print-directory -C Sandbox -f Makefile clean
+	@${MAKE} --no-print-directory -C FireEditor -f Makefile clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -83,5 +93,6 @@ help:
 	@echo "   ImGui"
 	@echo "   Fire"
 	@echo "   Sandbox"
+	@echo "   FireEditor"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

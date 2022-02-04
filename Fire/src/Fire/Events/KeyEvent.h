@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Fire/Events/Event.h"
+#include "Fire/Core/KeyCodes.h"
 
 namespace Fire {
 
@@ -11,7 +12,7 @@ namespace Fire {
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
-		KeyEvent(int keycode)
+		KeyEvent(const KeyCode keycode)
 			: m_KeyCode(keycode) {}
 
 		int m_KeyCode;
@@ -20,10 +21,10 @@ namespace Fire {
 	class FIRE_API KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent( int keycode, int repeatCount )
+		KeyPressedEvent( const KeyCode keycode, const uint16_t repeatCount )
 			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
-		inline int GetRepeatCount() const { return m_RepeatCount; }
+		inline uint16_t GetRepeatCount() const { return m_RepeatCount; }
 
 		std::string ToString() const override
 		{
@@ -34,13 +35,13 @@ namespace Fire {
 
 		EVENT_CLASS_TYPE(KeyPressed);
 	private:
-		int m_RepeatCount;
+		uint16_t m_RepeatCount;
 	};
 
 	class FIRE_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent( int keycode )
+		KeyReleasedEvent( const KeyCode keycode )
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override
@@ -56,7 +57,7 @@ namespace Fire {
 	class FIRE_API KeyTypedEvent : public KeyEvent
 	{
 	public:
-		KeyTypedEvent( int keycode )
+		KeyTypedEvent( const KeyCode keycode )
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override

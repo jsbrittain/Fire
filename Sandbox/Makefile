@@ -27,7 +27,7 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES += -I../Fire/vendor/spdlog/include -I../Fire/vendor/glad -I../Fire/src -I../Fire/vendor/glm
+INCLUDES += -I../Fire/vendor/spdlog/include -I../Fire/vendor/glad -I../Fire/src -I../Fire/vendor/glm -I../Fire/vendor/entt/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)

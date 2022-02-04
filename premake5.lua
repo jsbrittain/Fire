@@ -19,6 +19,7 @@ IncludeDir["GLAD"] = "%{wks.location}/Fire/vendor/glad/include"
 IncludeDir["ImGui"] = "%{wks.location}/Fire/vendor/imgui-docking"
 IncludeDir["glm"] = "%{wks.location}/Fire/vendor/glm"
 IncludeDir["stb_image"] = "%{wks.location}/Fire/vendor/stb_image"
+IncludeDir["entt"] = "%{wks.location}/Fire/vendor/entt/include"
 
 flags
 {
@@ -33,4 +34,5 @@ group ""
 
 include "Fire"
 include "Sandbox"
+include "FireEditor"
 --include "Games/Flappy"
