@@ -23,6 +23,7 @@ project "FireEditor"
 		"%{wks.location}/Fire/src",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.yaml}",
 		"%{IncludeDir.entt}"
 	}
 

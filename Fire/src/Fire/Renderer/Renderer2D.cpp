@@ -202,7 +202,7 @@ namespace Fire {
                      }
               }
 
-              // If texture not already bind, then add to new texture slot
+              // If texture not already bound, then add to new texture slot
               if (textureIndex == 0.0f)
               {
                      if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)

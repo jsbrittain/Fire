@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//#include "Hazel/Scene/SceneSerializer.h"
+
 namespace Fire {
 
 	EditorLayer::EditorLayer()
@@ -25,11 +27,10 @@ namespace Fire {
 		// Construct Scene
 		m_ActiveScene = CreateRef<Scene>();
 
+
 		// Entity
 		auto square = m_ActiveScene->CreateEntity("Green Square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f,1.0f,0.5f,1.0f});
-		auto& trans = square.GetComponent<TransformComponent>().Transform;
-		trans = glm::translate(trans, glm::vec3(0.0f,0.0f,0.0f));
 
 		/*std::cout << trans[0][0] << ", " << trans[0][1] << ", " << trans[0][2] << ", " << trans[0][3] << std::endl;
 		std::cout << trans[1][0] << ", " << trans[1][1] << ", " << trans[1][2] << ", " << trans[1][3] << std::endl;
@@ -38,15 +39,15 @@ namespace Fire {
 
 		m_SquareEntity = square;		// Keep track of square
 
-		auto square2 = m_ActiveScene->CreateEntity("Square");
+		auto square2 = m_ActiveScene->CreateEntity("Red Square");
 		square2.AddComponent<SpriteRendererComponent>(glm::vec4{1.0f,0.0f,0.0f,1.0f});
-		auto& trans2 = square2.GetComponent<TransformComponent>().Transform;
-		trans2 = glm::translate(trans2, glm::vec3(-1.0f, 0.0f, -0.5f));
+		auto& trans2 = square2.GetComponent<TransformComponent>().Translation;
+		trans2.x = -1.0f; trans2.z = -0.5f;
 
-		auto square3 = m_ActiveScene->CreateEntity("Square");
+		auto square3 = m_ActiveScene->CreateEntity("Blue Square");
 		square3.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f,0.0f,1.0f,1.0f});
-		auto& trans3 = square3.GetComponent<TransformComponent>().Transform;
-		trans3 = glm::translate(trans3, glm::vec3(1.0f, 0.0f, 0.5f));
+		auto& trans3 = square3.GetComponent<TransformComponent>().Translation;
+		trans3.x = 1.0f; trans3.z = 0.5f;
 
 
 
@@ -63,8 +64,8 @@ namespace Fire {
  		public:
  			virtual void OnCreate() override
  			{
- 				auto& transform = GetComponent<TransformComponent>().Transform;
- 				transform[3][0] = rand() % 10 - 5.0f;
+ 				auto& translation = GetComponent<TransformComponent>().Translation;
+ 				translation.x = rand() % 10 - 5.0f;
  			}
 
  			virtual void OnDestroy() override
@@ -73,17 +74,17 @@ namespace Fire {
 
  			virtual void OnUpdate(Timestep ts) override
  			{
- 				auto& transform = GetComponent<TransformComponent>().Transform;
+ 				auto& translation = GetComponent<TransformComponent>().Translation;
  				float speed = 5.0f;
 
  				if (Input::IsKeyPressed(Key::A))
- 					transform[3][0] -= speed * ts;
+ 					translation.x -= speed * ts;
  				if (Input::IsKeyPressed(Key::D))
- 					transform[3][0] += speed * ts;
+ 					translation.x += speed * ts;
  				if (Input::IsKeyPressed(Key::W))
- 					transform[3][1] += speed * ts;
+ 					translation.y += speed * ts;
  				if (Input::IsKeyPressed(Key::S))
- 					transform[3][1] -= speed * ts;
+ 					translation.y -= speed * ts;
  			}
  		};
 
@@ -181,11 +182,16 @@ namespace Fire {
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+ 		float minWinSizeX = style.WindowMinSize.x;
+ 		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+
+		style.WindowMinSize.x = minWinSizeX;
 
 		if (ImGui::BeginMenuBar())
 		{
@@ -195,6 +201,18 @@ namespace Fire {
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
+				/*if (ImGui::MenuItem("Serialize"))
+ 				{
+ 					SceneSerializer serializer(m_ActiveScene);
+ 					serializer.Serialize("assets/scenes/Example.hazel");
+ 				}
+
+ 				if (ImGui::MenuItem("Deserialize"))
+ 				{
+ 					SceneSerializer serializer(m_ActiveScene);
+ 					serializer.Deserialize("assets/scenes/Example.hazel");
+ 				}*/
+ 				
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				ImGui::EndMenu();
 			}

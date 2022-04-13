@@ -30,7 +30,7 @@ endif
 PCH = src/frpch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
-INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/glad/include -Ivendor/imgui-docking -Ivendor/glm -Ivendor/stb_image -Ivendor/entt/include
+INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/glad/include -Ivendor/imgui-docking -Ivendor/glm -Ivendor/stb_image -Ivendor/entt/include -Ivendor/yaml-cpp/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)

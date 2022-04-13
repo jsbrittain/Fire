@@ -11,6 +11,7 @@ endif
 ifeq ($(config),debug)
   GLAD_config = debug
   ImGui_config = debug
+  yaml_cpp_config = debug
   Fire_config = debug
   Sandbox_config = debug
   FireEditor_config = debug
@@ -18,6 +19,7 @@ ifeq ($(config),debug)
 else ifeq ($(config),release)
   GLAD_config = release
   ImGui_config = release
+  yaml_cpp_config = release
   Fire_config = release
   Sandbox_config = release
   FireEditor_config = release
@@ -25,6 +27,7 @@ else ifeq ($(config),release)
 else ifeq ($(config),dist)
   GLAD_config = dist
   ImGui_config = dist
+  yaml_cpp_config = dist
   Fire_config = dist
   Sandbox_config = dist
   FireEditor_config = dist
@@ -33,13 +36,13 @@ else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := GLAD ImGui Fire Sandbox FireEditor
+PROJECTS := GLAD ImGui yaml-cpp Fire Sandbox FireEditor
 
 .PHONY: all clean help $(PROJECTS) Dependencies
 
 all: $(PROJECTS)
 
-Dependencies: GLAD ImGui
+Dependencies: GLAD ImGui yaml-cpp
 
 GLAD:
 ifneq (,$(GLAD_config))
@@ -51,6 +54,12 @@ ImGui:
 ifneq (,$(ImGui_config))
 	@echo "==== Building ImGui ($(ImGui_config)) ===="
 	@${MAKE} --no-print-directory -C Fire/vendor/imgui-docking -f Makefile config=$(ImGui_config)
+endif
+
+yaml-cpp:
+ifneq (,$(yaml_cpp_config))
+	@echo "==== Building yaml-cpp ($(yaml_cpp_config)) ===="
+	@${MAKE} --no-print-directory -C Fire/vendor/yaml-cpp -f Makefile config=$(yaml_cpp_config)
 endif
 
 Fire: GLAD ImGui
@@ -74,6 +83,7 @@ endif
 clean:
 	@${MAKE} --no-print-directory -C Fire/vendor/glad -f Makefile clean
 	@${MAKE} --no-print-directory -C Fire/vendor/imgui-docking -f Makefile clean
+	@${MAKE} --no-print-directory -C Fire/vendor/yaml-cpp -f Makefile clean
 	@${MAKE} --no-print-directory -C Fire -f Makefile clean
 	@${MAKE} --no-print-directory -C Sandbox -f Makefile clean
 	@${MAKE} --no-print-directory -C FireEditor -f Makefile clean
@@ -91,6 +101,7 @@ help:
 	@echo "   clean"
 	@echo "   GLAD"
 	@echo "   ImGui"
+	@echo "   yaml-cpp"
 	@echo "   Fire"
 	@echo "   Sandbox"
 	@echo "   FireEditor"
